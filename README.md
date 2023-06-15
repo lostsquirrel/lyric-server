@@ -2,11 +2,11 @@
 self hosted lyric server for synology lyrics plugin
 
 ## test
-curl "localhost:8000/search?artist=a&title=b"
+curl "localhost:8000?artist=a&song=b"
 curl "localhost:8000/lyric?id=a-b.lrc"
 
 ## build
-VERSION=v1.0
+VERSION=v1.3
 docker build -t lostsquirrel/lyric-server:$VERSION .
 docker push lostsquirrel/lyric-server:$VERSION
 

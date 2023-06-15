@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  loader:
+    image: lostsquirrel/lyric-server:v1.1
+    container_name: lyric-server
+    restart: unless-stopped
+    networks:
+      - default
+    ports:
+      - 18000:8000
+    environment:
+      LYRCS_PATH: /lyrics
+    volumes:
+      - /volume2/music/lyrics:/lyrics:ro
+networks:
+  default:
+    external:
+      name: service-net

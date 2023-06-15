@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -12,8 +11,9 @@ const lyricSuffix = "lrc"
 
 type FindResult struct {
 	Artist string `json:"artist"`
-	Title  string `json:"title"`
+	Title  string `json:"song"`
 	Id     string `json:"id"`
+	Lyric  string `json:"lyrics"`
 }
 
 type Lyric struct {
@@ -22,7 +22,7 @@ type Lyric struct {
 }
 
 func (cfg *Config) Find(artist, title string) (*FindResult, error) {
-	fileName := fmt.Sprintf("%s-%s.%s", artist, title, lyricSuffix)
+	fileName := fmt.Sprintf("%s - %s.%s", artist, title, lyricSuffix)
 	filePath := filepath.Join(cfg.LyricsPath, fileName)
 	_, err := os.Stat(filePath)
 
@@ -30,15 +30,21 @@ func (cfg *Config) Find(artist, title string) (*FindResult, error) {
 		log.Printf("%s not found", fileName)
 		return nil, err
 	}
+	bc, err := os.ReadFile(filePath)
+	if err != nil {
+		log.Printf("read error: %v", err)
+		return nil, err
+	}
 	r := FindResult{
 		Artist: artist,
 		Title:  title,
-		Id:     fileName,
+		Id:     string(bc),
+		Lyric:  string(bc),
 	}
 	return &r, nil
 }
 
-func (cfg *Config) Get(id string) ([]byte, error) {
-	filePath := filepath.Join(cfg.LyricsPath, id)
-	return ioutil.ReadFile(filePath)
-}
+// func (cfg *Config) Get(id string) ([]byte, error) {
+// 	filePath := filepath.Join(cfg.LyricsPath, id)
+// 	return os.ReadFile(filePath)
+// }
