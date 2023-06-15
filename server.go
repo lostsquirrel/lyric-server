@@ -8,7 +8,7 @@ import (
 
 var config = BuildFromEnv()
 
-func check(w http.ResponseWriter, req *http.Request) {
+func search(w http.ResponseWriter, req *http.Request) {
 	if req.Method != http.MethodGet {
 		log.Printf("Method %s not support", req.Method)
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -31,9 +31,21 @@ func check(w http.ResponseWriter, req *http.Request) {
 	w.Write(rb)
 }
 
+func lyric(w http.ResponseWriter, req *http.Request) {
+	params := req.URL.Query()
+	id := params.Get("id")
+	log.Printf("downloading %s ", id)
+	r, err := config.Get(id)
+	if err != nil {
+		log.Printf("get content for : %s, %s", id, err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+	w.Write(r)
+}
+
 func main() {
-	http.HandleFunc("/", check)
-	// http.HandleFunc("/lyric", lyric)
+	http.HandleFunc("/search", search)
+	http.HandleFunc("/lyric", lyric)
 
 	http.ListenAndServe(":8000", nil)
 }

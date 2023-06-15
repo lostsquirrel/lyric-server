@@ -30,21 +30,21 @@ func (cfg *Config) Find(artist, title string) (*FindResult, error) {
 		log.Printf("%s not found", fileName)
 		return nil, err
 	}
-	bc, err := os.ReadFile(filePath)
-	if err != nil {
-		log.Printf("read error: %v", err)
-		return nil, err
-	}
+	// bc, err := os.ReadFile(filePath)
+	// if err != nil {
+	// 	log.Printf("read error: %v", err)
+	// 	return nil, err
+	// }
 	r := FindResult{
 		Artist: artist,
 		Title:  title,
-		Id:     string(bc),
-		Lyric:  string(bc),
+		Id:     string(fileName),
+		// Lyric:  string(bc),
 	}
 	return &r, nil
 }
 
-// func (cfg *Config) Get(id string) ([]byte, error) {
-// 	filePath := filepath.Join(cfg.LyricsPath, id)
-// 	return os.ReadFile(filePath)
-// }
+func (cfg *Config) Get(id string) ([]byte, error) {
+	filePath := filepath.Join(cfg.LyricsPath, id)
+	return os.ReadFile(filePath)
+}
